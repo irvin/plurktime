@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <title>Plurk TimeMachine</title>
+    <script src="jquery-1.6.4.min.js"></script>
+    <script src="kibo.js"></script>
+    <script src="tm.js"></script>
+</head>
+
+<body>
+    
+    <form>
+        <input id="acct" type="text" name="username" placeholder="Plurk account" required />
+        <input id="login" type="button" value="Lookup!" />
+    </form>
+
+    <!--
+    <div id="control">
+      <a id="old" href="#">◢</a><br>
+      <a id="new" href="#">◥</a>
+    </div>
+    -->
+
+</body>
+
+<style>
+    body { 
+        background-color: black;
+    }
+    form * {
+        font-size: 1.5em;
+        color: #bbb;
+        background-color: black;
+        opacity: 0.5;
+        border-radius: 10px;
+        padding: 3px 5px;
+    }
+    
+    form input#acct {
+        width: 8em;
+    }
+    
+    section {
+        position: absolute;
+        font-family: sans-serif;
+        color: black;
+        background-color: white;
+        padding: 20px;
+        overflow: hidden;
+        line-height: 1.2em;
+        
+      	-webkit-transition: all 1s ease-in-out;
+      	-moz-transition: all 1s ease-in-out;
+      	-o-transition: all 1s ease-in-out;
+      	-ms-transition: all 1s ease-in-out;
+      	transition: all 1s ease-in-out;
+	}
+	section span.meta {
+	   font-size: 18px;
+	   position: absolute;
+	   right: 20px;
+	   bottom: 20px;
+	}    
+	   
+</style>
