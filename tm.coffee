@@ -10,7 +10,7 @@ newTop = null
 topLev = 15
 
 defNewAlpha = 0.95
-defOldAlpha = 0.2
+defOldAlpha = 0.01
 curAlpha = null
 alphaLev = null
 
@@ -47,10 +47,7 @@ $ ->
     kibo.down( 'up', () -> scrollOld() )
         .down( 'down', () -> scrollNew() )
         
-    # $('a#new').click () -> scrollNew()
-    # $('a#old').click () -> scrollOld()
-
-
+        
 login = (acct) ->
     plurkObj = []
 
@@ -67,7 +64,7 @@ login = (acct) ->
             maxNum = $('section').length - 1
             curNum = 0
             curAlpha = defNewAlpha
-            alphaLev = (defNewAlpha - defOldAlpha) / maxNum
+            alphaLev = (defNewAlpha - defOldAlpha) / 15
             fontSizeLev = defOldFontSize / defNewFontSize
             newTop = ( screenHeight - defHeight) / 2
             $('section').addClass('show')
@@ -78,9 +75,7 @@ login = (acct) ->
             window.location.hash = ''
             return false
             
-    , -1 )    
-
-
+    , -1 )
 
 
 reShow = () ->
@@ -90,23 +85,29 @@ reShow = () ->
     curFontSize = defNewFontSize
     
     $('section').not('.show').css( 'opacity', 0 )
-    
     $('section.show').each (index) ->
-        $(this)
-            .css( 'height', curHeight )
-            .css( 'width', curWidth )
-            .css( 'left', ( screenWidth - curWidth) / 2 )
-            .css( 'top', ( newTop - (index * topLev) ) )
-            .css( 'font-size', curFontSize + "px" )
-            .css( 'opacity', curAlpha )
-            .css( 'z-index', maxNum - index )
         
-        curHeight *= fontSizeLev
-        curWidth *= fontSizeLev
-        curAlpha -= alphaLev
-        curFontSize *= fontSizeLev
-        return
+        if curAlpha > 0
+            $(this).css(
+                'height': curHeight
+                'width': curWidth
+                'left': (screenWidth - curWidth) / 2
+                'top': newTop - (index * topLev)
+                'font-size': curFontSize + "px"
+                'opacity': curAlpha
+                'z-index': maxNum - index
+            )
 
+            curHeight *= fontSizeLev
+            curWidth *= fontSizeLev
+            if curAlpha > alphaLev 
+                curAlpha = curAlpha - alphaLev 
+            else 
+                curAlpha = 0          
+            curFontSize *= fontSizeLev
+
+        else $(this).css 'opacity': 0
+        return
 
 scrollOld = () ->
     if (curNum < maxNum)
