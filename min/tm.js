@@ -21,51 +21,56 @@
   uid = null;
   entryTmpl = null;
   $(function() {
-    var kibo, source;
+    var acct, kibo, source;
     source = $("#entryTmpl").html();
     entryTmpl = Handlebars.compile(source);
     $('form').submit(function() {
-      login($('input#acct').val());
+      var acct;
+      acct = $('input#acct').val().trim();
+      if (acct !== '') {
+        window.location.hash = '#' + acct;
+      }
       return false;
     });
+    $(window).on('hashchange', function() {
+      var acct;
+      acct = window.location.hash.substr(1).trim();
+      return login(acct);
+    });
+    acct = window.location.hash.substr(1).trim();
+    if (acct !== '') {
+      login(acct);
+    }
     kibo = new Kibo();
-    kibo.down('up', function() {
+    return kibo.down('up', function() {
       return scrollOld();
     }).down('down', function() {
       return scrollNew();
     });
-    $('a#new').click(function() {
-      return scrollNew();
-    });
-    return $('a#old').click(function() {
-      return scrollOld();
-    });
   });
   login = function(acct) {
-    var feedUrl, param, plurkObj;
-    param = $.param({
-      url: 'http://www.plurk.com/m/u/' + acct
-    });
+    var plurkObj;
     plurkObj = [];
-    feedUrl = "http://www.plurk.com/" + acct + ".xml";
-    return $.jGFeed(feedUrl, function(feeds) {
+    return $.jGFeed("http://www.plurk.com/" + acct + ".xml", function(feeds) {
       var entry, i, _ref;
-      if (!feeds) {
+      if (feeds) {
+        $('section').remove();
+        for (i = 0, _ref = feeds.entries.length; 0 <= _ref ? i < _ref : i > _ref; 0 <= _ref ? i++ : i--) {
+          entry = feeds.entries[i];
+          $('<section>').append(entryTmpl(entry)).appendTo('body');
+        }
+        maxNum = $('section').length - 1;
+        curNum = 0;
+        curAlpha = defNewAlpha;
+        alphaLev = (defNewAlpha - defOldAlpha) / maxNum;
+        fontSizeLev = defOldFontSize / defNewFontSize;
+        newTop = (screenHeight - defHeight) / 2;
+        $('section').addClass('show');
+        return reShow();
+      } else {
+        window.location.hash = '';
         return false;
       }
-      $('section').remove();
-      for (i = 0, _ref = feeds.entries.length; 0 <= _ref ? i < _ref : i > _ref; 0 <= _ref ? i++ : i--) {
-        entry = feeds.entries[i];
-        $('<section>').append(entryTmpl(entry)).appendTo('body');
-      }
-      maxNum = $('section').length - 1;
-      curNum = 0;
-      curAlpha = defNewAlpha;
-      alphaLev = (defNewAlpha - defOldAlpha) / maxNum;
-      fontSizeLev = defOldFontSize / defNewFontSize;
-      newTop = (screenHeight - defHeight) / 2;
-      $('section').addClass('show');
-      return reShow();
     }, -1);
   };
   reShow = function() {

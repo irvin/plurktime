@@ -26,46 +26,57 @@ uid = null
 entryTmpl = null
 
 $ ->
-    source   = $("#entryTmpl").html();
+    source = $("#entryTmpl").html();
     entryTmpl = Handlebars.compile(source);
 
     $('form').submit () ->
-        login($('input#acct').val())
+        acct = $('input#acct').val().trim()
+        if acct != ''
+            window.location.hash = '#' + acct
         return false
-    
+
+    $(window).on( 'hashchange', () ->
+        acct = window.location.hash.substr(1).trim()
+        login(acct)
+    )
+
+    acct = window.location.hash.substr(1).trim()
+    if acct != '' then login(acct)
+
     kibo = new Kibo()   
     kibo.down( 'up', () -> scrollOld() )
         .down( 'down', () -> scrollNew() )
         
-    $('a#new').click () -> scrollNew()
-    $('a#old').click () -> scrollOld()
+    # $('a#new').click () -> scrollNew()
+    # $('a#old').click () -> scrollOld()
 
 
 login = (acct) ->
-    param = $.param({ url: 'http://www.plurk.com/m/u/' + acct })
     plurkObj = []
-    
-    feedUrl = "http://www.plurk.com/#{acct}.xml"
-    
-    $.jGFeed(feedUrl, (feeds) ->
-        # Check for errors
-        if (!feeds) then return false
-        # console.log(feeds)
-        $('section').remove()
 
-        for i in [0...feeds.entries.length]            
-            entry = feeds.entries[i]
-            $('<section>').append(entryTmpl(entry)).appendTo('body')
+    $.jGFeed( "http://www.plurk.com/#{acct}.xml", (feeds) ->
+        # Check for errors
+        if (feeds)
+            # console.log(feeds)
+            $('section').remove()
+    
+            for i in [0...feeds.entries.length]            
+                entry = feeds.entries[i]
+                $('<section>').append(entryTmpl(entry)).appendTo('body')
+                
+            maxNum = $('section').length - 1
+            curNum = 0
+            curAlpha = defNewAlpha
+            alphaLev = (defNewAlpha - defOldAlpha) / maxNum
+            fontSizeLev = defOldFontSize / defNewFontSize
+            newTop = ( screenHeight - defHeight) / 2
+            $('section').addClass('show')
             
-        maxNum = $('section').length - 1
-        curNum = 0
-        curAlpha = defNewAlpha
-        alphaLev = (defNewAlpha - defOldAlpha) / maxNum
-        fontSizeLev = defOldFontSize / defNewFontSize
-        newTop = ( screenHeight - defHeight) / 2
-        $('section').addClass('show')
-        
-        reShow()
+            reShow()
+            
+        else
+            window.location.hash = ''
+            return false
             
     , -1 )    
 
