@@ -61,7 +61,26 @@ login = (acct) ->
             for i in [0...maxNum]            
                 entry = feeds.entries[i]
                 entry.content = entry.content.substr(entry.content.indexOf(' '))
-                
+                date = new Date(entry.publishedDate)
+                datediff = Math.floor((Date.now() - date) / 60000)
+
+                if datediff < 1
+                    entry.publishedDate = 'just now'
+                else if datediff < 2
+                    entry.publishedDate = '1 min ago'
+                else if datediff < 60
+                    entry.publishedDate = datediff + ' mins ago'
+                else if datediff < 120
+                    entry.publishedDate = '1 hour ago'
+                else if datediff < 1440
+                    entry.publishedDate = Math.floor(datediff / 60) + ' hours ago'
+                else if datediff < 2880
+                    entry.publishedDate = '1 day ago'
+                else if datediff < 10080
+                    entry.publishedDate = Math.floor(datediff / 1440) + ' days ago'
+                else
+                    entry.publishedDate = date.toLocaleString()
+
                 section = $("<section style='opacity: 0' class='show'>")
                     .append(entryTmpl(entry))
                     .appendTo('body')
