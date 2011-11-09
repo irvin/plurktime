@@ -58,6 +58,7 @@
         maxNum = feeds.entries.length;
         for (i = 0; 0 <= maxNum ? i < maxNum : i > maxNum; 0 <= maxNum ? i++ : i--) {
           entry = feeds.entries[i];
+          entry.content = entry.content.substr(entry.content.indexOf(' '));
           section = $("<section style='opacity: 0' class='show'>").append(entryTmpl(entry)).appendTo('body');
         }
         curNum = 0;
