@@ -3,7 +3,9 @@
     <meta charset="utf-8">
     <title>Plurk TimeMachine</title>
     <script src="library/jquery-1.7.min.js"></script>
+    <script src="library/jquery.jgfeed-min.js"></script>    
     <script src="library/kibo.js"></script>
+    <script src="library/handlebars.1.0.0.beta.3.js"></script>
     <script src="min/tm.js"></script>
 </head>
 
@@ -14,12 +16,11 @@
         <input id="login" type="button" value="Lookup!" />
     </form>
 
-    <!--
-    <div id="control">
-      <a id="old" href="#">◢</a><br>
-      <a id="new" href="#">◥</a>
-    </div>
-    -->
+    <script id="entryTmpl" type="text/x-handlebars-template">
+        <a href="{{link}}">{{author}}</a>
+        {{{content}}}
+        <span class="meta">{{publishedDate}}</span>
+    </script>
 
 </body>
 

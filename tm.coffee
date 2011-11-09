@@ -23,8 +23,12 @@ maxNum = null
 curNum = null
 
 uid = null
+entryTmpl = null
 
 $ ->
+    source   = $("#entryTmpl").html();
+    entryTmpl = Handlebars.compile(source);
+
     $('input#login').click () ->
         login($('input#acct').val())
     
@@ -39,29 +43,32 @@ $ ->
 login = (acct) ->
     param = $.param({ url: 'http://www.plurk.com/m/u/' + acct })
     plurkObj = []
-
-    $.getJSON( "ba-simple-proxy.php?#{param}").done (data) ->
-        $(data.contents).each () ->    
-            tmpObj = $(this).find('div.plurk')
-            if (tmpObj.text() != '') then plurkObj.push(tmpObj)
-            
+    
+    feedUrl = "http://www.plurk.com/#{acct}.xml"
+    
+    $.jGFeed(feedUrl, (feeds) ->
+        # Check for errors
+        if (!feeds) then return false
+        # console.log(feeds)
         $('section').remove()
 
-        $(plurkObj)[0].each () ->
-            $('<section>').append($(this).contents()).appendTo('body')
+        for i in [0...feeds.entries.length]            
+            entry = feeds.entries[i]
+            $('<section>').append(entryTmpl(entry)).appendTo('body')
+            
+        maxNum = $('section').length - 1
+        curNum = 0
+        curAlpha = defNewAlpha
+        alphaLev = (defNewAlpha - defOldAlpha) / maxNum
+        fontSizeLev = defOldFontSize / defNewFontSize
+        newTop = ( screenHeight - defHeight) / 2
+        $('section').addClass('show')
         
-        init()
         reShow()
+            
+    , -1 )    
 
 
-init = () -> 
-    maxNum = $('section').length - 1
-    curNum = 0
-    curAlpha = defNewAlpha
-    alphaLev = (defNewAlpha - defOldAlpha) / maxNum
-    fontSizeLev = defOldFontSize / defNewFontSize
-    newTop = ( screenHeight - defHeight) / 2
-    $('section').addClass('show')
 
 
 reShow = () ->

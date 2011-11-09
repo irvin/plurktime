@@ -1,5 +1,5 @@
 (function() {
-  var alphaLev, curAlpha, curFontSize, curHeight, curNum, curWidth, defHeight, defNewAlpha, defNewFontSize, defOldAlpha, defOldFontSize, defWidth, fontSizeLev, init, login, maxNum, newTop, reShow, screenHeight, screenWidth, scrollNew, scrollOld, topLev, uid;
+  var alphaLev, curAlpha, curFontSize, curHeight, curNum, curWidth, defHeight, defNewAlpha, defNewFontSize, defOldAlpha, defOldFontSize, defWidth, entryTmpl, fontSizeLev, login, maxNum, newTop, reShow, screenHeight, screenWidth, scrollNew, scrollOld, topLev, uid;
   screenWidth = $(window).width();
   screenHeight = $(window).height();
   defWidth = 600;
@@ -19,8 +19,11 @@
   maxNum = null;
   curNum = null;
   uid = null;
+  entryTmpl = null;
   $(function() {
-    var kibo;
+    var kibo, source;
+    source = $("#entryTmpl").html();
+    entryTmpl = Handlebars.compile(source);
     $('input#login').click(function() {
       return login($('input#acct').val());
     });
@@ -38,35 +41,31 @@
     });
   });
   login = function(acct) {
-    var param, plurkObj;
+    var feedUrl, param, plurkObj;
     param = $.param({
       url: 'http://www.plurk.com/m/u/' + acct
     });
     plurkObj = [];
-    return $.getJSON("ba-simple-proxy.php?" + param).done(function(data) {
-      $(data.contents).each(function() {
-        var tmpObj;
-        tmpObj = $(this).find('div.plurk');
-        if (tmpObj.text() !== '') {
-          return plurkObj.push(tmpObj);
-        }
-      });
+    feedUrl = "http://www.plurk.com/" + acct + ".xml";
+    return $.jGFeed(feedUrl, function(feeds) {
+      var entry, i, _ref;
+      if (!feeds) {
+        return false;
+      }
       $('section').remove();
-      $(plurkObj)[0].each(function() {
-        return $('<section>').append($(this).contents()).appendTo('body');
-      });
-      init();
+      for (i = 0, _ref = feeds.entries.length; 0 <= _ref ? i < _ref : i > _ref; 0 <= _ref ? i++ : i--) {
+        entry = feeds.entries[i];
+        $('<section>').append(entryTmpl(entry)).appendTo('body');
+      }
+      maxNum = $('section').length - 1;
+      curNum = 0;
+      curAlpha = defNewAlpha;
+      alphaLev = (defNewAlpha - defOldAlpha) / maxNum;
+      fontSizeLev = defOldFontSize / defNewFontSize;
+      newTop = (screenHeight - defHeight) / 2;
+      $('section').addClass('show');
       return reShow();
-    });
-  };
-  init = function() {
-    maxNum = $('section').length - 1;
-    curNum = 0;
-    curAlpha = defNewAlpha;
-    alphaLev = (defNewAlpha - defOldAlpha) / maxNum;
-    fontSizeLev = defOldFontSize / defNewFontSize;
-    newTop = (screenHeight - defHeight) / 2;
-    return $('section').addClass('show');
+    }, -1);
   };
   reShow = function() {
     curHeight = defHeight;
