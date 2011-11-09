@@ -29,8 +29,9 @@ $ ->
     source   = $("#entryTmpl").html();
     entryTmpl = Handlebars.compile(source);
 
-    $('input#login').click () ->
+    $('form').submit () ->
         login($('input#acct').val())
+        return false
     
     kibo = new Kibo()   
     kibo.down( 'up', () -> scrollOld() )

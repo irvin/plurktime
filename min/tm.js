@@ -24,8 +24,9 @@
     var kibo, source;
     source = $("#entryTmpl").html();
     entryTmpl = Handlebars.compile(source);
-    $('input#login').click(function() {
-      return login($('input#acct').val());
+    $('form').submit(function() {
+      login($('input#acct').val());
+      return false;
     });
     kibo = new Kibo();
     kibo.down('up', function() {
