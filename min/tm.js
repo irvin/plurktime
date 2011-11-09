@@ -52,20 +52,26 @@
     var plurkObj;
     plurkObj = [];
     return $.jGFeed("http://www.plurk.com/" + acct + ".xml", function(feeds) {
-      var entry, i, _ref;
+      var entry, i, section;
       if (feeds) {
         $('section').remove();
-        for (i = 0, _ref = feeds.entries.length; 0 <= _ref ? i < _ref : i > _ref; 0 <= _ref ? i++ : i--) {
+        maxNum = feeds.entries.length;
+        for (i = 0; 0 <= maxNum ? i < maxNum : i > maxNum; 0 <= maxNum ? i++ : i--) {
           entry = feeds.entries[i];
-          $('<section>').append(entryTmpl(entry)).appendTo('body');
+          section = $("<section style='opacity: 0'>").append(entryTmpl(entry)).appendTo('body');
+          if (i < 15) {
+            section.addClass('show');
+          }
         }
-        maxNum = $('section').length - 1;
         curNum = 0;
         curAlpha = defNewAlpha;
         alphaLev = (defNewAlpha - defOldAlpha) / 15;
         fontSizeLev = defOldFontSize / defNewFontSize;
         newTop = (screenHeight - defHeight) / 2;
-        $('section').addClass('show');
+        acct = $('input#acct').val().trim();
+        if (acct !== '') {
+          $('input#acct').blur();
+        }
         return reShow();
       } else {
         window.location.hash = '';

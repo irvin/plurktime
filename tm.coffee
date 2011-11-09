@@ -56,18 +56,21 @@ login = (acct) ->
         if (feeds)
             # console.log(feeds)
             $('section').remove()
-    
-            for i in [0...feeds.entries.length]            
+
+            maxNum = feeds.entries.length    
+            for i in [0...maxNum]            
                 entry = feeds.entries[i]
-                $('<section>').append(entryTmpl(entry)).appendTo('body')
+                section = $("<section style='opacity: 0'>").append(entryTmpl(entry)).appendTo('body')
+                if i < 15 then section.addClass('show')
                 
-            maxNum = $('section').length - 1
             curNum = 0
             curAlpha = defNewAlpha
             alphaLev = (defNewAlpha - defOldAlpha) / 15
             fontSizeLev = defOldFontSize / defNewFontSize
             newTop = ( screenHeight - defHeight) / 2
-            $('section').addClass('show')
+
+            acct = $('input#acct').val().trim()
+            if acct != '' then $('input#acct').blur()
             
             reShow()
             
@@ -92,7 +95,7 @@ reShow = () ->
                 'height': curHeight
                 'width': curWidth
                 'left': (screenWidth - curWidth) / 2
-                'top': newTop - (index * topLev)
+                'top': newTop - (index * topLev)    # to be adjust
                 'font-size': curFontSize + "px"
                 'opacity': curAlpha
                 'z-index': maxNum - index
