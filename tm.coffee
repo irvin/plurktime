@@ -60,8 +60,9 @@ login = (acct) ->
             maxNum = feeds.entries.length    
             for i in [0...maxNum]            
                 entry = feeds.entries[i]
-                section = $("<section style='opacity: 0'>").append(entryTmpl(entry)).appendTo('body')
-                if i < 15 then section.addClass('show')
+                section = $("<section style='opacity: 0' class='show'>")
+                    .append(entryTmpl(entry))
+                    .appendTo('body')
                 
             curNum = 0
             curAlpha = defNewAlpha
@@ -95,7 +96,7 @@ reShow = () ->
                 'height': curHeight
                 'width': curWidth
                 'left': (screenWidth - curWidth) / 2
-                'top': newTop - (index * topLev)    # to be adjust
+                'top': newTop - (index * topLev) * (60 - index) / 60
                 'font-size': curFontSize + "px"
                 'opacity': curAlpha
                 'z-index': maxNum - index
@@ -112,17 +113,16 @@ reShow = () ->
         else $(this).css 'opacity': 0
         return
 
+
 scrollOld = () ->
-    if (curNum < maxNum)
+    if (curNum < maxNum - 1)
         $('section').eq(curNum).removeClass('show')
         curNum += 1
-    reShow()
-    return
+        reShow()
 
 
 scrollNew = () ->
     if (curNum > 0)
         curNum -= 1
         $('section').eq(curNum).addClass('show')
-    reShow()
-    return
+        reShow()

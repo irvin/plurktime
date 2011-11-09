@@ -58,10 +58,7 @@
         maxNum = feeds.entries.length;
         for (i = 0; 0 <= maxNum ? i < maxNum : i > maxNum; 0 <= maxNum ? i++ : i--) {
           entry = feeds.entries[i];
-          section = $("<section style='opacity: 0'>").append(entryTmpl(entry)).appendTo('body');
-          if (i < 15) {
-            section.addClass('show');
-          }
+          section = $("<section style='opacity: 0' class='show'>").append(entryTmpl(entry)).appendTo('body');
         }
         curNum = 0;
         curAlpha = defNewAlpha;
@@ -91,7 +88,7 @@
           'height': curHeight,
           'width': curWidth,
           'left': (screenWidth - curWidth) / 2,
-          'top': newTop - (index * topLev),
+          'top': newTop - (index * topLev) * (60 - index) / 60,
           'font-size': curFontSize + "px",
           'opacity': curAlpha,
           'z-index': maxNum - index
@@ -112,17 +109,17 @@
     });
   };
   scrollOld = function() {
-    if (curNum < maxNum) {
+    if (curNum < maxNum - 1) {
       $('section').eq(curNum).removeClass('show');
       curNum += 1;
+      return reShow();
     }
-    reShow();
   };
   scrollNew = function() {
     if (curNum > 0) {
       curNum -= 1;
       $('section').eq(curNum).addClass('show');
+      return reShow();
     }
-    reShow();
   };
 }).call(this);
