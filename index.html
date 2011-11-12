@@ -23,6 +23,27 @@
 </head>
 
 <body>
+
+    <a href="#about_this"><span id="info">info</span></a>
+
+    <div id="about" style="display: none">
+        <a href="#close_about"><span id="info" class="close">close</span></a>
+    
+        <h1>About Plurk TimeMachine</h1>
+        <p>Author: <a href="http://www.linkedin.com/pub/irvin-chen/30/a87/6b0">Irvin</a></p>
+        <p>Source Codes are available at <a href="https://github.com/irvin/plurktime">GitHub</a>,<br> release under both <a href="http://www.opensource.org/licenses/mit-license.php">MIT</a> / <a href="http://www.gnu.org/licenses/gpl.html">GPL v3</a> license.</p>
+
+        <p>Components: <br>
+        <ul>        
+        <li><a href="http://www.handlebarsjs.com">Handlebars.js</a></li>
+        <li><a href="http://jquery.com">jQuery</a></li>
+        <li><a href="http://plugins.jquery.com/project/jgfeed">jGFeed</a> & <a href="http://code.google.com/apis/feed/">Google Feed API</a></li>
+        <li><a href="https://github.com/marquete/kibo">Kibo</a></li>
+        </ul> 
+        </p>
+        <p>Thanks <a href="http://timdream.org/">@timdream</a> for help, and <a href="http://kidwm.net/">@WM</a> for this wonderful idea to combine TimeMachine and Plurk together.</p>
+        </p>
+    </div>
     
     <form>
         <input id="acct" type="text" name="username" placeholder="Plurk account" required />
@@ -38,9 +59,42 @@
 </body>
 
 <style>
+
+    #info {
+        background-color: #444444;
+        border-radius: 1em;
+        color: #BBBBBB;
+        line-height: 1em;
+        padding: 0.2em 0.5em;
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        z-index: 9999;
+    }
+
+    #about {
+        background-color: #333333;
+        border-radius: 0.5em;
+        box-shadow: 0 0 4px white;
+        color: #BBBBBB;
+        left: 30%;
+        opacity: 0.95;
+        padding: 0.5em 1.5em;
+        position: absolute;
+        top: 20%;
+        width: 40%;
+        z-index: 9999;
+        line-height: 1.5em;
+    }
+    
+    #about a {
+        color: white;
+    }
+
     body { 
         background-color: black;
     }
+    
     form * {
         font-size: 1.5em;
         color: #bbb;
@@ -74,6 +128,6 @@
 	   position: absolute;
 	   right: 20px;
 	   bottom: 20px;
-	}    
+	}
 	   
 </style>

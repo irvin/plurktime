@@ -25,6 +25,7 @@ curNum = null
 uid = null
 entryTmpl = null
 
+
 $ ->
     source = $("#entryTmpl").html();
     entryTmpl = Handlebars.compile(source);
@@ -35,18 +36,31 @@ $ ->
             window.location.hash = '#' + acct
         return false
 
-    $(window).on( 'hashchange', () ->
-        acct = window.location.hash.substr(1).trim()
-        login(acct)
-    )
+    $(window).on( 'hashchange', () -> hashchange() )
 
     acct = window.location.hash.substr(1).trim()
-    if acct != '' then login(acct)
+    if acct != '' then hashchange()
 
     kibo = new Kibo()   
     kibo.down( 'up', () -> scrollOld() )
         .down( 'down', () -> scrollNew() )
+            
+            
+hashchange = () ->
+    acct = window.location.hash.substr(1).trim()
+    if acct == 'about_this'
+        $('#about').fadeIn()
+        return false
+    
+    if acct == 'close_about'
+        $('#about').fadeOut()
+        window.location.hash = ''
+        return false
         
+    else
+        if $('#about').css('display') == 'block' then $('#about').fadeOut()
+        login(acct)
+
         
 login = (acct) ->
     plurkObj = []

@@ -1,5 +1,5 @@
 (function() {
-  var alphaLev, curAlpha, curFontSize, curHeight, curNum, curWidth, defHeight, defNewAlpha, defNewFontSize, defOldAlpha, defOldFontSize, defWidth, entryTmpl, fontSizeLev, login, maxNum, newTop, reShow, screenHeight, screenWidth, scrollNew, scrollOld, topLev, uid;
+  var alphaLev, curAlpha, curFontSize, curHeight, curNum, curWidth, defHeight, defNewAlpha, defNewFontSize, defOldAlpha, defOldFontSize, defWidth, entryTmpl, fontSizeLev, hashchange, login, maxNum, newTop, reShow, screenHeight, screenWidth, scrollNew, scrollOld, topLev, uid;
   screenWidth = $(window).width();
   screenHeight = $(window).height();
   defWidth = 600;
@@ -33,13 +33,11 @@
       return false;
     });
     $(window).on('hashchange', function() {
-      var acct;
-      acct = window.location.hash.substr(1).trim();
-      return login(acct);
+      return hashchange();
     });
     acct = window.location.hash.substr(1).trim();
     if (acct !== '') {
-      login(acct);
+      hashchange();
     }
     kibo = new Kibo();
     return kibo.down('up', function() {
@@ -48,6 +46,24 @@
       return scrollNew();
     });
   });
+  hashchange = function() {
+    var acct;
+    acct = window.location.hash.substr(1).trim();
+    if (acct === 'about_this') {
+      $('#about').fadeIn();
+      return false;
+    }
+    if (acct === 'close_about') {
+      $('#about').fadeOut();
+      window.location.hash = '';
+      return false;
+    } else {
+      if ($('#about').css('display') === 'block') {
+        $('#about').fadeOut();
+      }
+      return login(acct);
+    }
+  };
   login = function(acct) {
     var plurkObj;
     plurkObj = [];
