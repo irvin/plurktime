@@ -35,7 +35,12 @@ $ ->
         if acct != ''
             window.location.hash = '#' + acct
         return false
-
+    
+    $('#aboutbox').click () ->
+        window.location.hash = 'close_about'
+        return false
+        
+    
     $(window).on( 'hashchange', () -> hashchange() )
 
     acct = window.location.hash.substr(1).trim()
@@ -49,16 +54,16 @@ $ ->
 hashchange = () ->
     acct = window.location.hash.substr(1).trim()
     if acct == 'about_this'
-        $('#about').fadeIn()
+        $('#aboutbox').fadeIn()
         return false
     
     if acct == 'close_about'
-        $('#about').fadeOut()
+        $('#aboutbox').fadeOut()
         window.location.hash = ''
         return false
         
     else
-        if $('#about').css('display') == 'block' then $('#about').fadeOut()
+        if $('#aboutbox').css('display') == 'block' then $('#aboutbox').fadeOut()
         login(acct)
 
         
